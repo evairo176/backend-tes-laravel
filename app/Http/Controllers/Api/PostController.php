@@ -21,10 +21,10 @@ class PostController extends Controller
 
         $post = [];
         if ($request->all()) {
-            $post = Post::join('categories', 'posts.category_id', '=', 'categories.id')->search($search)->orderBy("posts.updated_at", "desc")->get(['posts.title', 'posts.description', 'posts.link', 'posts.pubDate', "posts.thumbnail", "categories.title as category_title", "categories.description as category_description"]);
+            $post = Post::join('categories', 'posts.category_id', '=', 'categories.id')->search($search)->orderBy("posts.updated_at", "desc")->get(['posts.id', 'posts.title', 'posts.description', 'posts.link', 'posts.pubDate', "posts.thumbnail", "categories.title as category_title", "categories.description as category_description"]);
         } else {
             $post =  Post::join('categories', 'posts.category_id', '=', 'categories.id')->orderBy("posts.updated_at", "desc")
-                ->get(['posts.title', 'posts.description', 'posts.link', 'posts.pubDate', "posts.thumbnail", "categories.title as category_title", "categories.description as category_description"]);
+                ->get(['posts.id', 'posts.title', 'posts.description', 'posts.link', 'posts.pubDate', "posts.thumbnail", "categories.title as category_title", "categories.description as category_description"]);
         }
 
 
