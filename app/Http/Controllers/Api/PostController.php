@@ -21,10 +21,10 @@ class PostController extends Controller
 
         $post = [];
         if ($request->all()) {
-            $post = Post::join('categories', 'posts.category_id', '=', 'categories.id')->search($search)->get(['posts.*', "categories.title as category_title", "categories.description as category_description"]);
+            $post = Post::join('categories', 'posts.category_id', '=', 'categories.id')->search($search)->orderBy("posts.updated_at", "desc")->get(['posts.title', 'posts.description', 'posts.link', 'posts.pubDate', "posts.thumbnail", "categories.title as category_title", "categories.description as category_description"]);
         } else {
-            $post =  Post::join('categories', 'posts.category_id', '=', 'categories.id')
-                ->get(['posts.*', "categories.title as category_title", "categories.description as category_description"]);
+            $post =  Post::join('categories', 'posts.category_id', '=', 'categories.id')->orderBy("posts.updated_at", "desc")
+                ->get(['posts.title', 'posts.description', 'posts.link', 'posts.pubDate', "posts.thumbnail", "categories.title as category_title", "categories.description as category_description"]);
         }
 
 
@@ -38,6 +38,27 @@ class PostController extends Controller
 
         return response()->json([
             "message" => "Data show",
+            "success" => true,
+            "post" => $post
+        ], 200);
+    }
+
+    public function detail($id)
+    {
+
+        $post =  Post::join('categories', 'posts.category_id', '=', 'categories.id')->orderBy("posts.id", "desc")
+            ->where("posts.id", $id)
+            ->first(['posts.*', "categories.title as category_title", "categories.description as category_description"]);
+
+        if (!$post) {
+            return response()->json([
+                "message" => "Data not found",
+                "success" => false,
+            ], 401);
+        }
+
+        return response()->json([
+            "message" => "Data detail show",
             "success" => true,
             "post" => $post
         ], 200);
@@ -75,12 +96,12 @@ class PostController extends Controller
         try {
 
             $data = [
-                "title" => Str::slug(strtolower($request->title)),
+                "title" => $request->title,
                 "description" => $request->description,
                 "category_id" => $request->category_id,
                 "pubDate" => Carbon::now(),
                 "thumbnail" => $request->thumbnail,
-                "link" => URL::to("/") . "/" . strtolower($category->title) . "/" . Str::slug(strtolower($request->title))
+                "link" => $request->base_url . "/" . strtolower($category->title) . "/" . Str::slug(strtolower($request->title))
             ];
 
             $post = Post::create($data);
@@ -139,12 +160,12 @@ class PostController extends Controller
         try {
 
             $data = [
-                "title" => Str::slug(strtolower($request->title)),
+                "title" => $request->title,
                 "description" => $request->description,
                 "category_id" => $request->category_id,
                 "pubDate" => Carbon::now(),
                 "thumbnail" => $request->thumbnail,
-                "link" => URL::to("/") . "/" . strtolower($category->title) . "/" . Str::slug(strtolower($request->title))
+                "link" => $request->base_url . "/" . strtolower($category->title) . "/" . Str::slug(strtolower($request->title))
             ];
 
             $post->update($data);
