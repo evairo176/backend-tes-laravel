@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,3 +26,5 @@ Route::get('/post/{id}', [PostController::class, "detail"]);
 Route::post('/post/create', [PostController::class, "create"]);
 Route::put('/post/update/{id}', [PostController::class, "update"]);
 Route::delete('/post/delete/{id}', [PostController::class, "delete"]);
+
+Route::resource('profile', ProfileController::class);
