@@ -27,7 +27,7 @@ class PostController extends Controller
                 ->get(['posts.id', 'posts.title', 'posts.description', 'posts.link', 'posts.pubDate', "posts.thumbnail", "categories.title as category_title", "categories.description as category_description"]);
         }
 
-
+        // dawd
 
         if (count($post) < 1) {
             return response()->json([
