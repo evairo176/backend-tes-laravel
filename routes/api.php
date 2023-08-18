@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ProfileController;
 use Illuminate\Http\Request;
@@ -28,3 +29,12 @@ Route::put('/post/update/{id}', [PostController::class, "update"]);
 Route::delete('/post/delete/{id}', [PostController::class, "delete"]);
 
 Route::resource('profile', ProfileController::class);
+
+
+// jwt
+Route::middleware(['api'])->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/getaccount', [AuthController::class, 'getaccount']);
+});
+Route::get('/refresh', [AuthController::class, 'refresh']);
